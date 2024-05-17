@@ -5,7 +5,7 @@ import { AudioObject } from './AudioObject';
 document.addEventListener('DOMContentLoaded', () => {
   // Container for audio objects (refernces to audio elements and data)
   let audioObjects = [];
-
+  
   // Window object for debugging in console
   window.OpenSeadragon = OpenSeadragon;
 
@@ -15,21 +15,50 @@ document.addEventListener('DOMContentLoaded', () => {
     maxZoomLevel: 10,
   });
 
-  // Temp for now work with first audio object
-  window.audioObject1 = new AudioObject(document.getElementById('1'));
-  audioObject1.audioEl.play();
-  audioObject1.setVolume(0);
 
-  // TODO: Loop over each audio element and create an AudioObject
+  // Get all audio elements and create AudioObject instances
+  document.querySelectorAll('audio').forEach((audioEl) => {
+    audioObjects.push(new AudioObject(audioEl));
+  });
+
+
+
+  function checkForIntersections() {
+    // Get the viewport as an image coordinate rectangle)
+    const viewportImageRect = viewer.viewport.viewportToImageRectangle(viewer.viewport.getBounds());
+    // Area of the above rectangle
+    const viewportImageArea = viewportImageRect.width * viewportImageRect.height;
+    
+    // Loop over each audio object and check for intersection with the viewport
+    for (const audioObject of audioObjects) {
+      audioObject.audioEl.play();
+
+      // Create new rect for the intersection of the audio object and the viewport
+      const intersectRect = audioObject.rectangle.intersection(viewportImageRect);
+      let intersectArea;
+      let intersectPercentage;
+
+      // If there is an intersection calculate the area and percentage
+      if (intersectRect) {
+        intersectArea = intersectRect.width * intersectRect.height;
+      } else {
+        intersectArea = 0;
+      }
+
+      // Calculate the percentage of the viewport that is intersecting with the audio object
+      intersectPercentage = (100 / viewportImageArea) * intersectArea;
+      
+      // Volume expected to be between 0 and 1
+      // Clamp a value between 0 and 1 using intersectPercentage
+      audioObject.setVolume(Math.max(0, Math.min(intersectPercentage / 100, 1)));
+    }    
+  }
 
 
   viewer.addHandler('animation-finish', (e) => {
-    const viewportImageRect = viewer.viewport.viewportToImageRectangle(viewer.viewport.getBounds());
-    let viewportImageArea = viewportImageRect.width * viewportImageRect.height;
-    let intersectRect = audioObject1.rectangle.intersection(viewportImageRect);
-    let intersectArea;
+    
+    checkForIntersections();
 
-    console.log(e);
     // Return if for some reason there are no audio objects
     // if (audioObjects.length === 0) {
     //   return;
@@ -37,18 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check for intersection with audio objects here
     
     
-    if (intersectRect) {
-      console.log(intersectRect);
-      console.log(viewportImageArea);
-      intersectArea = intersectRect.width * intersectRect.height;
-    } else {
-      intersectArea = 0;
-      console.log('Audio object is out of view');
-    }
-    let intersectPercentage = (100 / viewportImageArea) * intersectArea;
-    console.log('intersectPercentage:', intersectPercentage);
-    console.log('intersectArea:', intersectArea);
-    audioObject1.setVolume(intersectPercentage / 100);
 
   });
 
