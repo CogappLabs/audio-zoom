@@ -1,6 +1,9 @@
 import './styles.css';
 import OpenSeadragon from 'openseadragon';
+import { throttle } from 'underscore';
 import { AudioObject } from './AudioObject';
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
   // Container for audio objects (refernces to audio elements and data)
@@ -23,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-  function checkForIntersections() {
+  const checkForIntersections = throttle(()=> {
     // Get the viewport as an image coordinate rectangle)
     const viewportImageRect = viewer.viewport.viewportToImageRectangle(viewer.viewport.getBounds());
     // Area of the above rectangle
@@ -52,21 +55,18 @@ document.addEventListener('DOMContentLoaded', () => {
       // Clamp a value between 0 and 1 using intersectPercentage
       audioObject.setVolume(Math.max(0, Math.min(intersectPercentage / 100, 1)));
     }    
-  }
+  }, 200);
 
 
-  viewer.addHandler('animation-finish', (e) => {
-    
-    checkForIntersections();
 
+
+  viewer.addHandler('animation', (e) => {
     // Return if for some reason there are no audio objects
-    // if (audioObjects.length === 0) {
-    //   return;
-    // }
-    // Check for intersection with audio objects here
-    
-    
+    if (audioObjects.length === 0) {
+      return;
+    }
 
+    checkForIntersections();
   });
 
 
