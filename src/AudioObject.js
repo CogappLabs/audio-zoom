@@ -6,20 +6,15 @@ import OpenSeadragon from "openseadragon";
  */
 export class AudioObject {
 
-  constructor(data) {
-    this.id = data.id;
-    this.src = data.src;
-    this.xywh = data.xywh;
-    this.audio = new Audio(this.src);
+  constructor(audioEl) {
+    this.audioEl = audioEl;
     this.audioCtx = new AudioContext();
-    this.source = this.audioCtx.createMediaElementSource(this.audio);
+    this.source = this.audioCtx.createMediaElementSource(audioEl);
     this.panner = this.audioCtx.createStereoPanner({pan: 0});
     this.source.connect(this.panner);
     this.panner.connect(this.audioCtx.destination);
+    this.extractXYWH();
     this.rectangle = new OpenSeadragon.Rect(...this.xywh);
-    this.audio.volume = 0;
-    this.audio.loop = true;
-    this.audio.play();
   }
 
   extractXYWH() {
@@ -27,7 +22,8 @@ export class AudioObject {
   }
 
   setVolume(volume) {
-    this.audio.volume = volume;
+    this.volume = volume;
+    this.audioEl.volume = volume;
   }
   // TODO: method for panning audio to left/right channels
 
