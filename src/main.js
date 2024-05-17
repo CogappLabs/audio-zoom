@@ -34,7 +34,10 @@ function init() {
     audioObjects.push(new AudioObject(audioEl));
   });
 
-
+  // // Return if for some reason there are no audio objects
+  if (audioObjects.length === 0) {
+    return;
+  }
 
   const checkForIntersections = throttle(()=> {
     // Get the viewport as an image coordinate rectangle)
@@ -69,14 +72,7 @@ function init() {
 
 
 
-
-  viewer.addHandler('animation', (e) => {
-    // Return if for some reason there are no audio objects
-    if (audioObjects.length === 0) {
-      return;
-    }
-
-    checkForIntersections();
-  });
+  viewer.addHandler('open', checkForIntersections);
+  viewer.addHandler('animation', checkForIntersections);
 
 }
