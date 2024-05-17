@@ -82,8 +82,7 @@ function init() {
   }, 200);
 
 
-
+  // Check for intersections on open and animation events (throttled)
   viewer.addHandler('open', checkForIntersections);
   viewer.addHandler('animation', checkForIntersections);
-
 }
