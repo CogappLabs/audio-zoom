@@ -10,7 +10,8 @@ export class AudioObject {
     this.audioEl = audioEl;
     this.audioCtx = new AudioContext();
     this.source = this.audioCtx.createMediaElementSource(audioEl);
-    this.panner = this.audioCtx.createStereoPanner({pan: 0});
+    this.panner = this.audioCtx.createStereoPanner();
+    this.panner.pan.value = -1;
     this.source.connect(this.panner);
     this.panner.connect(this.audioCtx.destination);
     this.extractXYWH();
@@ -25,7 +26,9 @@ export class AudioObject {
     this.volume = volume;
     this.audioEl.volume = volume;
   }
-  // TODO: method for panning audio to left/right channels
 
+  setPan(pan) {
+    this.panner.pan.value = pan;
+  }
 
 }
