@@ -1,0 +1,12 @@
+{
+    "rewrites": [
+        {
+            "source": "/view/:shortcode?/:rest*",
+            "destination": "/index.html"
+        },
+        {
+            "source": "/embed/:shortcode?/:rest*",
+            "destination": "/index.html"
+        }
+    ]
+}
