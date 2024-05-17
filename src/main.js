@@ -3,9 +3,15 @@ import OpenSeadragon from 'openseadragon';
 import { throttle } from 'underscore';
 import { AudioObject } from './AudioObject';
 
+const startButton = document.querySelector('#start');
+startButton.addEventListener('click', () => {
+  document.querySelector('audio').play();
+  init();
+  startButton.remove();
+});
 
 
-document.addEventListener('DOMContentLoaded', () => {
+function init() {
   // Container for audio objects (refernces to audio elements and data)
   let audioObjects = [];
   
@@ -16,6 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
     id: 'viewer',
     tileSources: ['https://images.peck.cogapp.com/iiif/3/OP197a-Garden-birds.ptif/info.json'],
     maxZoomLevel: 10,
+    showZoomControl: false,
+    showHomeControl: false,
+    showFullPageControl: false,
+    showRotationControl: false,
   });
 
 
@@ -34,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Loop over each audio object and check for intersection with the viewport
     for (const audioObject of audioObjects) {
-      audioObject.audioEl.play();
+      // audioObject.audioEl.play();
 
       // Create new rect for the intersection of the audio object and the viewport
       const intersectRect = audioObject.rectangle.intersection(viewportImageRect);
@@ -69,6 +79,4 @@ document.addEventListener('DOMContentLoaded', () => {
     checkForIntersections();
   });
 
-
-
-});
+}
