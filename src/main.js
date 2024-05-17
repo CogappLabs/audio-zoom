@@ -3,9 +3,26 @@ import OpenSeadragon from 'openseadragon';
 import { throttle } from 'underscore';
 import { AudioObject } from './AudioObject';
 
+const audioObjectsData = [
+  {
+    id: 1,
+    src: 'goldfinch.mp3',
+    xywh: [17, 167, 325, 346],
+  },
+  {
+    id: 2,
+    src: 'robin.mp3',
+    xywh: [350, 173, 477, 372],
+  },
+  {
+    id: 3,
+    src: 'great-tit.mp3',
+    xywh: [840, 131, 354, 343],
+  },
+];
+
 const startButton = document.querySelector('#start');
 startButton.addEventListener('click', () => {
-  document.querySelector('audio').play();
   init();
   startButton.remove();
 });
@@ -15,6 +32,11 @@ function init() {
   // Container for audio objects (refernces to audio elements and data)
   let audioObjects = [];
   
+  // loop through audioObjectData and instantiate audioObjects
+  audioObjectsData.forEach((audioObjectData)=>{
+    audioObjects.push(new AudioObject(audioObjectData));
+  });
+
   // Window object for debugging in console
   window.OpenSeadragon = OpenSeadragon;
 
