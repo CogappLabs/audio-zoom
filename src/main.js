@@ -50,13 +50,21 @@ function init() {
       const intersectRect = audioObject.rectangle.intersection(viewportImageRect);
       let intersectArea;
       let intersectPercentage;
+      let panScale;
 
-      // If there is an intersection calculate the area and percentage
+      // If there is an intersection calculate the area of viewport occupied and center offset.
       if (intersectRect) {
         intersectArea = intersectRect.width * intersectRect.height;
+
+        // Find the center of the intersection rectangle relative to the viewport image rectangle edge.
+        let intersectCenter = (intersectRect.x + (intersectRect.width/2)) - viewportImageRect.x
+        // Convert to a value between -1 and 1
+        panScale = ((2/viewportImageRect.width) * intersectCenter) -1
       } else {
         intersectArea = 0;
+        panScale = 0;
       }
+
 
       // Calculate the percentage of the viewport that is intersecting with the audio object
       intersectPercentage = (100 / viewportImageArea) * intersectArea;
@@ -64,6 +72,9 @@ function init() {
       // Volume expected to be between 0 and 1
       // Clamp a value between 0 and 1 using intersectPercentage
       audioObject.setVolume(Math.max(0, Math.min(intersectPercentage / 100, 1)));
+
+      // Set stereo panning between -1 and 1
+      audioObject.setPan(panScale);
     }    
   }, 200);
 
