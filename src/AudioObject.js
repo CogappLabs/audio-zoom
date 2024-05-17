@@ -16,6 +16,7 @@ export class AudioObject {
     this.panner.connect(this.audioCtx.destination);
     this.extractXYWH();
     this.rectangle = new OpenSeadragon.Rect(...this.xywh);
+    this.audioEl.play();
   }
 
   extractXYWH() {
