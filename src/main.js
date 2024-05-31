@@ -20,8 +20,8 @@ function init() {
 
   window.viewer = OpenSeadragon({
     id: 'viewer',
-    tileSources: ['https://images.peck.cogapp.com/iiif/3/OP197a-Garden-birds.ptif/info.json'],
-    maxZoomLevel: 10,
+    tileSources: ['https://images.cogapp.com/iiif/audio-zoom-garden-birds.ptif/info.json'],
+    maxZoomLevel: 3,
     showZoomControl: false,
     showHomeControl: false,
     showFullPageControl: false,
@@ -74,7 +74,7 @@ function init() {
       
       // Volume expected to be between 0 and 1
       // Clamp a value between 0 and 1 using intersectPercentage
-      audioObject.setVolume(Math.max(0, Math.min(intersectPercentage / 100, 1)));
+      audioObject.setVolume(Math.max(0, Math.min((intersectPercentage / 100)*1.2, 1)));
 
       // Set stereo panning between -1 and 1
       audioObject.setPan(panScale);
