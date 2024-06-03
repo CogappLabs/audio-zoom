@@ -18,6 +18,7 @@ function init() {
   // Window object for debugging in console
   window.OpenSeadragon = OpenSeadragon;
 
+  
   window.viewer = OpenSeadragon({
     id: 'viewer',
     tileSources: ['https://images.cogapp.com/iiif/audio-zoom-garden-birds.ptif/info.json'],
@@ -26,6 +27,10 @@ function init() {
     showHomeControl: false,
     showFullPageControl: false,
     showRotationControl: false,
+    // Attempt to fix the grid lines which seem to appear on over zooming in FF.
+    SubPixelRoundingForTransparency: {
+      '*': OpenSeadragon.SUBPIXEL_ROUNDING_OCCURRENCES.ONLY_AT_REST,
+    },
   });
 
 
